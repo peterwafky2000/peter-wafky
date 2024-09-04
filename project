@@ -1,0 +1,149 @@
+#!/bin/bash
+
+add_user() {
+  read -p "Enter username: " username
+  read -sp "Enter password: " password
+  echo
+  sudo useradd -m -N -s /bin/bash "$username"
+  echo "$username:$password" | sudo chpasswd
+  echo "User added successfully with password."
+}
+
+modify_user() {
+  read -p "Enter username: " username
+  read -p "Enter new username: " new_username
+  sudo usermod -l "$new_username" "$username"
+  echo "User modified successfully."
+}
+
+delete_user() {
+  read -p "Enter username: " username
+  sudo userdel -r "$username"
+  echo "User deleted successfully."
+}
+
+list_users() {
+  cat /etc/passwd
+}
+
+add_group() {
+  read -p "Enter group name: " groupname
+  sudo groupadd "$groupname"
+  echo "Group added successfully."
+}
+
+modify_group() {
+  read -p "Enter group name: " groupname
+  read -p "Enter new group name: " new_groupname
+  sudo groupmod -n "$new_groupname" "$groupname"
+  echo "Group modified successfully."
+}
+
+delete_group() {
+  read -p "Enter group name: " groupname
+  sudo groupdel "$groupname"
+  echo "Group deleted successfully."
+}
+
+list_groups() {
+  cat /etc/group
+}
+
+disable_user() {
+  read -p "Enter username: " username
+  sudo usermod -L "$username"
+  echo "User disabled successfully."
+}
+
+enable_user() {
+  read -p "Enter username: " username
+  sudo usermod -U "$username"
+  echo "User enabled successfully."
+}
+
+change_password() {
+  read -p "Enter username: " username
+  sudo passwd "$username"
+  echo "Password changed successfully."
+}
+
+about() {
+  echo "This program is a simple user management tool for Linux."
+}
+
+options=(
+  "Add User"
+  "Modify User"
+  "Delete User"
+  "List Users"
+  "Add Group"
+  "Modify Group"
+  "Delete Group"
+  "List Groups"
+  "Disable User"
+  "Enable User"
+  "Change Password"
+  "About"
+  "Exit"
+)
+
+PS2='Enter your choice: '
+while true; do
+  select opt in "${options[@]}"
+  do
+    case $opt in
+      "Add User")
+        add_user
+        break
+        ;;
+      "Modify User")
+        modify_user
+        break
+        ;;
+      "Delete User")
+        delete_user
+        break
+        ;;
+      "List Users")
+        list_users
+        break
+        ;;
+      "Add Group")
+        add_group
+        break
+        ;;
+      "Modify Group")
+        modify_group
+        break
+        ;;
+      "Delete Group")
+        delete_group
+        break
+        ;;
+      "List Groups")
+        list_groups
+        break
+        ;;
+      "Disable User")
+        disable_user
+        break
+        ;;
+      "Enable User")
+        enable_user
+        break
+        ;;
+      "Change Password")
+        change_password
+        break
+        ;;
+      "About")
+        about
+        break
+        ;;
+      "Exit")
+        exit
+        ;;
+      *) echo "Invalid option $REPLY";;
+    esac
+  done
+done
